@@ -54,4 +54,9 @@ public class MainMenu : MonoBehaviour {
     {
         SceneManager.LoadScene("scene");
     }
+
+    public void ExitBtn()
+    {
+        Application.Quit();
+    }
 }

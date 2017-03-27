@@ -4,47 +4,48 @@ using System.Collections;
 public class CameraControl : MonoBehaviour
 {
     Vector3 camSmoothDampV;
-    float minScale = 5;
-    float maxScale = 20;
+    float minScale = 2;
+    float maxScale = 5;
 
     void Update()
     {
         Vector3 moveVector = Vector3.zero;
-        if (Input.mousePosition.x < Screen.width / 20 && Camera.main.transform.position.x > 0)
+        if (Input.mousePosition.x < Screen.width / 20 && Camera.main.transform.position.x > GameManager.map.mapGrid.GetLength(0)/2)
         {
-            moveVector = new Vector3(1f, moveVector.y, moveVector.z);
+            moveVector = new Vector3(0.5f, moveVector.y, 0.5f);
         }
-        else if (Input.mousePosition.x > Screen.width - Screen.width / 20 && Camera.main.transform.position.x < GameManager.map.mapGrid.GetLength(0) - GameManager.map.mapGrid.GetLength(0)/4)
+        else if (Input.mousePosition.x > Screen.width - Screen.width / 20 && Camera.main.transform.position.x < GameManager.map.mapGrid.GetLength(0)+1)
         {
-            moveVector = new Vector3(-1f, moveVector.y, moveVector.z);
+            moveVector = new Vector3(-0.5f, moveVector.y, -0.5f);
         }
         else
         {
-            moveVector = new Vector3(0, moveVector.y, moveVector.z);
+            moveVector = new Vector3(0, moveVector.y, 0);
         }
 
-        if (Input.mousePosition.y < Screen.height / 20 && Camera.main.transform.position.z > 0)
+        if (Input.mousePosition.y < Screen.height / 20 && Camera.main.transform.position.y > 0)
         {
-            moveVector = new Vector3(moveVector.x, moveVector.y, 1);
+            moveVector = new Vector3(moveVector.x, 1, moveVector.z);
         }
-        else if (Input.mousePosition.y > Screen.height - Screen.height / 20 && Camera.main.transform.position.z < GameManager.map.mapGrid.GetLength(1) - GameManager.map.mapGrid.GetLength(1)/4)
+        else if (Input.mousePosition.y > Screen.height - Screen.height / 20 && Camera.main.transform.position.y < GameManager.map.mapGrid.GetLength(1)+1)
         {
-            moveVector = new Vector3(moveVector.x, moveVector.y, -1);
+            moveVector = new Vector3(moveVector.x, -1, moveVector.z);
         }
         else
         {
-            moveVector = new Vector3(moveVector.x, moveVector.y, 0);
+            moveVector = new Vector3(moveVector.x, 0, moveVector.z);
         }
         // zoom in
-        if (Input.GetAxis("Mouse ScrollWheel") > 0 && Camera.main.transform.position.y > minScale)
+        if (Input.GetAxis("Mouse ScrollWheel") > 0 && Camera.main.orthographicSize > minScale)
         {
-            moveVector = new Vector3(moveVector.x, 5, moveVector.z);
+            Camera.main.orthographicSize -= 0.3f;
+            //moveVector = new Vector3(moveVector.x, 5, moveVector.z);
         }
-
         // zoom out
-        if (Input.GetAxis("Mouse ScrollWheel") < 0 && Camera.main.transform.position.y < maxScale)
+        else if (Input.GetAxis("Mouse ScrollWheel") < 0 && Camera.main.orthographicSize < maxScale)
         {
-            moveVector = new Vector3(moveVector.x, -5, moveVector.z);
+            Camera.main.orthographicSize += 0.3f;
+            //moveVector = new Vector3(moveVector.x, -5, moveVector.z);
         }
 
         Camera.main.transform.position = Vector3.SmoothDamp(
